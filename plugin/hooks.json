@@ -1,0 +1,11 @@
+{
+  "mac-studio-session-check": {
+    "SessionStart": [
+      {
+        "type": "command",
+        "command": "python3 ~/.gemini/scripts/session_check.py --client antigravity",
+        "timeout": 10
+      }
+    ]
+  }
+}

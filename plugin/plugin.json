@@ -1,0 +1,12 @@
+{
+  "name": "mac-studio-orchestrator",
+  "displayName": "Mac Studio AI Orchestrator",
+  "version": "1.1.0",
+  "description": "Global multi-project orchestration + PromptForge guided prompt compiler & API cost optimizer for Antigravity (Argon) and Claude Code on Mac Studio (M4 Max, 36GB).",
+  "logo": "assets/logo.svg",
+  "suggestedPrompts": [
+    "/build-prompt Turn my rough idea into a model-optimized, low-cost prompt",
+    "/route-task Analyze my current project and recommend the best workflow for my next feature",
+    "/init-project-gates Inspect this repository and set up custom verification gates in AGENTS.md"
+  ]
+}

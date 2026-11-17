@@ -1,0 +1,240 @@
+{
+  "version": "2026.11.1",
+  "last_updated": "2026-11-17",
+  "description": "Updatable Model Dialect & Pricing Registry for Mac Studio AI Orchestrator (PromptForge Engine).",
+  "models": {
+    "claude-haiku": {
+      "id": "claude-haiku",
+      "name": "Claude Haiku 4.5 (Fast Triage & Budget)",
+      "provider": "Anthropic",
+      "tier": "budget",
+      "cli_flag": "--model haiku --effort low",
+      "pricing_per_1m": {
+        "input": 0.8,
+        "cached_input": 0.08,
+        "output": 4.0
+      },
+      "dialect": {
+        "delimiter": "xml",
+        "context_placement": "top_before_task",
+        "reasoning_style": "chain_of_draft",
+        "supports_prefill": true
+      },
+      "best_practices": [
+        "Wrap distinct sections in semantic XML tags (<context>, <constraints>, <task>, <output_contract>).",
+        "Place static reference files and rules at the very top so Anthropic prompt caching discounts input tokens by 90%.",
+        "Use Chain of Draft (<=5 words per step in <draft>) to keep output fast and inexpensive."
+      ],
+      "anti_patterns": [
+        "Avoid deeply nested or ambiguous prose instructions without examples.",
+        "Do not mix static reference context after the dynamic user question (breaks prefix cache)."
+      ]
+    },
+    "claude-sonnet": {
+      "id": "claude-sonnet",
+      "name": "Claude Sonnet 5.5 (Standard Coding & Execution)",
+      "provider": "Anthropic",
+      "tier": "standard",
+      "cli_flag": "--model sonnet --effort medium",
+      "pricing_per_1m": {
+        "input": 3.0,
+        "cached_input": 0.3,
+        "output": 15.0
+      },
+      "dialect": {
+        "delimiter": "xml",
+        "context_placement": "top_before_task",
+        "reasoning_style": "chain_of_draft",
+        "supports_prefill": true
+      },
+      "best_practices": [
+        "Use explicit XML tags (<role>, <static_context>, <verification_gates>, <constraints>, <task>, <output_contract>).",
+        "State explicit scope boundaries (which files to touch and which not to touch) to prevent over-engineering.",
+        "Include a 1-line <self_check> rubric so the model verifies edge cases before emitting final code."
+      ],
+      "anti_patterns": [
+        "Avoid open-ended 'make this better' prompts without acceptance criteria.",
+        "Avoid verbose step-by-step narration when only code or structured JSON is needed."
+      ]
+    },
+    "claude-opus-thinking": {
+      "id": "claude-opus-thinking",
+      "name": "Claude Opus (High Effort / Extended Thinking)",
+      "provider": "Anthropic",
+      "tier": "reasoning",
+      "cli_flag": "--model opus --effort high",
+      "pricing_per_1m": {
+        "input": 15.0,
+        "cached_input": 1.5,
+        "output": 75.0
+      },
+      "dialect": {
+        "delimiter": "xml",
+        "context_placement": "top_before_task",
+        "reasoning_style": "native_hidden_cot",
+        "supports_prefill": false
+      },
+      "best_practices": [
+        "Provide crystal-clear end-state invariants, architectural constraints, and verification gates in XML tags.",
+        "Let native high-effort thinking handle decomposition\u2014strip manual 'think step by step' instructions.",
+        "Reserve for complex architecture, concurrency bugs, and security audits."
+      ],
+      "anti_patterns": [
+        "Never inject manual Chain-of-Thought prompts (causes redundant double-reasoning and inflates output cost).",
+        "Do not use for routine single-file edits or simple boilerplate where Sonnet or Flash is 5x-20x cheaper."
+      ]
+    },
+    "gemini-flash": {
+      "id": "gemini-flash",
+      "name": "Gemini Flash (UI Inspection, Fast Multimodal & Budget)",
+      "provider": "Google",
+      "tier": "budget",
+      "cli_flag": "agy -p --effort low --mode=auto",
+      "pricing_per_1m": {
+        "input": 0.15,
+        "cached_input": 0.0375,
+        "output": 0.6
+      },
+      "dialect": {
+        "delimiter": "markdown",
+        "context_placement": "top_before_task",
+        "reasoning_style": "chain_of_draft",
+        "supports_prefill": false
+      },
+      "best_practices": [
+        "Use clear Markdown headings (###) and bulleted checklists.",
+        "Place large documents, logs, or multimodal context first, followed by a concise task instruction at the very end.",
+        "Ideal for high-volume tasks, DOM/UI inspection, and fast summarization."
+      ],
+      "anti_patterns": [
+        "Avoid burying the core question at the top of a massive context block."
+      ]
+    },
+    "gemini-argon-pro": {
+      "id": "gemini-argon-pro",
+      "name": "Gemini 4 Argon (Multi-File Scaffolding & Multimodal Pro)",
+      "provider": "Google",
+      "tier": "standard",
+      "cli_flag": "agy -p --effort medium --mode=auto",
+      "pricing_per_1m": {
+        "input": 1.25,
+        "cached_input": 0.3125,
+        "output": 5.0
+      },
+      "dialect": {
+        "delimiter": "markdown",
+        "context_placement": "top_before_task",
+        "reasoning_style": "chain_of_draft",
+        "supports_prefill": false
+      },
+      "best_practices": [
+        "Structure prompts with explicit Markdown sections: ### Role, ### Static Context & Gates, ### Constraints, ### Task, ### Output Contract.",
+        "Include explicit negative constraints (what NOT to do) to keep multi-file scaffolding tight.",
+        "Leverage Gemini's massive context window for >5-file boilerplate and media/PDF analysis."
+      ],
+      "anti_patterns": [
+        "Avoid mixing unrelated subtasks in a single unnumbered paragraph."
+      ]
+    },
+    "gemini-thinking": {
+      "id": "gemini-thinking",
+      "name": "Gemini 4 Argon High (Deep Reasoning Mode)",
+      "provider": "Google",
+      "tier": "reasoning",
+      "cli_flag": "agy -p --effort high --mode=auto",
+      "pricing_per_1m": {
+        "input": 2.5,
+        "cached_input": 0.625,
+        "output": 10.0
+      },
+      "dialect": {
+        "delimiter": "markdown",
+        "context_placement": "top_before_task",
+        "reasoning_style": "native_hidden_cot",
+        "supports_prefill": false
+      },
+      "best_practices": [
+        "Define clear goal states, edge-case constraints, and verification gates without prescribing manual reasoning steps.",
+        "Place all repository context above the final task directive."
+      ],
+      "anti_patterns": [
+        "Do not force verbose manual Chain-of-Thought when High reasoning effort is already active."
+      ]
+    },
+    "gpt-4o-mini": {
+      "id": "gpt-4o-mini",
+      "name": "OpenAI GPT-4o Mini (Budget API Tier)",
+      "provider": "OpenAI",
+      "tier": "budget",
+      "cli_flag": "openai-api --model gpt-4o-mini",
+      "pricing_per_1m": {
+        "input": 0.15,
+        "cached_input": 0.075,
+        "output": 0.6
+      },
+      "dialect": {
+        "delimiter": "markdown",
+        "context_placement": "top_before_task",
+        "reasoning_style": "chain_of_draft",
+        "supports_prefill": false
+      },
+      "best_practices": [
+        "Keep static instructions >1,024 tokens at the very start to trigger automatic OpenAI prefix caching (50% discount).",
+        "Specify strict JSON or Markdown output schemas."
+      ],
+      "anti_patterns": [
+        "Avoid complex multi-hop reasoning without Chain-of-Draft steps."
+      ]
+    },
+    "gpt-4o": {
+      "id": "gpt-4o",
+      "name": "OpenAI GPT-4o (Standard API Tier)",
+      "provider": "OpenAI",
+      "tier": "standard",
+      "cli_flag": "openai-api --model gpt-4o",
+      "pricing_per_1m": {
+        "input": 2.5,
+        "cached_input": 1.25,
+        "output": 10.0
+      },
+      "dialect": {
+        "delimiter": "markdown",
+        "context_placement": "top_before_task",
+        "reasoning_style": "chain_of_draft",
+        "supports_prefill": false
+      },
+      "best_practices": [
+        "Separate permanent Developer/System rules from dynamic User task payloads.",
+        "Use Chain of Draft to cut output token latency and cost by up to 65%."
+      ],
+      "anti_patterns": [
+        "Avoid placing dynamic timestamps or changing variables at the top of the prompt (invalidates prefix cache)."
+      ]
+    },
+    "o3-reasoning": {
+      "id": "o3-reasoning",
+      "name": "OpenAI o3 / Reasoning (Frontier Reasoning Tier)",
+      "provider": "OpenAI",
+      "tier": "reasoning",
+      "cli_flag": "openai-api --model o3",
+      "pricing_per_1m": {
+        "input": 10.0,
+        "cached_input": 2.5,
+        "output": 40.0
+      },
+      "dialect": {
+        "delimiter": "markdown",
+        "context_placement": "top_before_task",
+        "reasoning_style": "native_hidden_cot",
+        "supports_prefill": false
+      },
+      "best_practices": [
+        "Keep prompts direct and specification-driven: state what the final solution must satisfy.",
+        "Omit 'think step by step'\u2014reasoning models perform internal search automatically."
+      ],
+      "anti_patterns": [
+        "Never prompt with manual Chain-of-Thought instructions on o-series reasoning models."
+      ]
+    }
+  }
+}

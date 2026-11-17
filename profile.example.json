@@ -1,0 +1,12 @@
+{
+  "machine_label": "Mac Studio M4 Max",
+  "ram_gb": 36,
+  "max_worktrees": 3,
+  "account_tier": "Personal Pro (Claude + Gemini)",
+  "default_claude_model": "sonnet",
+  "default_architect_model": "opus",
+  "default_triage_model": "haiku",
+  "default_agy_effort": "medium",
+  "edit_strategy": "in_branch_with_stash",
+  "mentor_mode_default": true
+}

@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PromptForge Studio — Mac Studio AI Orchestrator</title>
+  <style>
+    :root {
+      --bg: #0b1120;
+      --panel: #111827;
+      --border: #1e293b;
+      --text: #f1f5f9;
+      --muted: #94a3b8;
+      --accent: #38bdf8;
+      --emerald: #10b981;
+      --amber: #f59e0b;
+      --purple: #a855f7;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+    header {
+      padding: 18px 28px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(17, 24, 39, 0.9);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--accent);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+    }
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 24px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    @media (max-width: 960px) { .container { grid-template-columns: 1fr; } }
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    h2 { margin-top: 0; font-size: 18px; display: flex; align-items: center; gap: 8px; }
+    textarea, input, select {
+      width: 100%;
+      background: #0f172a;
+      color: var(--text);
+      border: 1px solid #334155;
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 14px;
+      margin-top: 6px;
+      margin-bottom: 12px;
+    }
+    button {
+      background: var(--accent);
+      color: #0f172a;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 16px;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 14px;
+      transition: opacity 0.15s;
+    }
+    button:hover { opacity: 0.9; }
+    button.secondary {
+      background: #1e293b;
+      color: var(--text);
+      border: 1px solid #334155;
+      font-weight: 600;
+    }
+    .preset-bar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+    .preset-btn { font-size: 12px; padding: 6px 10px; }
+    .q-box {
+      background: #0f172a;
+      border: 1px solid #1e293b;
+      border-radius: 10px;
+      padding: 12px;
+      margin-bottom: 10px;
+    }
+    .opt-pills { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+    .opt-pill {
+      font-size: 12px;
+      padding: 5px 10px;
+      border-radius: 6px;
+      background: #1e293b;
+      color: var(--muted);
+      cursor: pointer;
+      border: 1px solid transparent;
+    }
+    .opt-pill.active {
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--emerald);
+      border-color: var(--emerald);
+    }
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .kpi {
+      background: #0f172a;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px;
+      text-align: center;
+    }
+    .kpi .val { font-size: 22px; font-weight: 800; color: var(--emerald); }
+    .kpi .lbl { font-size: 11px; color: var(--muted); text-transform: uppercase; }
+    pre {
+      background: #090d16;
+      border: 1px solid #334155;
+      border-radius: 10px;
+      padding: 14px;
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-size: 13px;
+      color: #e2e8f0;
+      max-height: 420px;
+      overflow-y: auto;
+    }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 10px; }
+    th, td { padding: 8px 10px; border-bottom: 1px solid var(--border); text-align: left; }
+    th { color: var(--muted); font-size: 11px; text-transform: uppercase; }
+    .save-pill { color: var(--emerald); font-weight: 700; }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <strong>PromptForge Studio</strong>
+      <span style="color: var(--muted); margin-left: 8px; font-size: 13px;">Mac Studio AI Orchestrator • Novice Guided Builder & 3-Layer Cost Optimizer</span>
+    </div>
+    <span class="badge" id="registryVersion">Loading Registry...</span>
+  </header>
+
+  <div class="container">
+    <div>
+      <div class="card">
+        <h2>1. Start With Your Rough Idea</h2>
+        <div class="preset-bar">
+          <button class="secondary preset-btn" onclick="setPreset('Write a Python script that parses messy PDF invoice text into strict JSON and flags missing totals')">Preset: Parse Invoices to JSON</button>
+          <button class="secondary preset-btn" onclick="setPreset('Build a responsive React & Tailwind settings modal with dark mode and keyboard shortcuts')">Preset: React UI Modal</button>
+          <button class="secondary preset-btn" onclick="setPreset('Investigate a race condition and memory leak in our async worker queue architecture')">Preset: Deep Architecture Debug</button>
+        </div>
+        <label style="font-size:13px;color:var(--muted);">What do you want the AI to build, fix, or analyze?</label>
+        <textarea id="rawIdea" rows="3" placeholder="e.g., I want a python script that reads my csv files and cleans up bad rows..."></textarea>
+        <button onclick="runInterview()">Step 1: Analyze & Generate Clarifying Questions</button>
+      </div>
+
+      <div class="card" id="interviewCard" style="display:none;">
+        <h2>2. Novice Guided Clarifications (Click to Customize)</h2>
+        <p style="font-size:13px;color:var(--muted);margin-top:0;">Answering these 3 quick questions eliminates 4–5 costly retry turns. Smart defaults are pre-selected for you:</p>
+        <div id="questionsContainer"></div>
+        <label style="font-size:13px;color:var(--muted);">Role (Auto-Suggested):</label>
+        <input type="text" id="roleInput" />
+        <div style="display:flex; gap:12px; align-items:center; margin-top:8px;">
+          <div style="flex:1;">
+            <label style="font-size:13px;color:var(--muted);">Target Model Dialect:</label>
+            <select id="modelSelect" onchange="compilePrompt()"></select>
+          </div>
+          <div style="padding-top:14px;">
+            <label style="font-size:13px; cursor:pointer;">
+              <input type="checkbox" id="codToggle" checked onchange="compilePrompt()" style="width:auto;margin-right:6px;" />
+              Chain of Draft (&le;5 words/step)
+            </label>
+          </div>
+        </div>
+        <button onclick="compilePrompt()" style="width:100%;margin-top:8px;">Step 2: Compile Model-Perfect Prompt & Calculate Savings</button>
+      </div>
+
+      <div class="card">
+        <h2>3. Updatable Model Rulebook (`models_registry.json`)</h2>
+        <p style="font-size:13px;color:var(--muted);margin-top:0;">Add new model prompting rules as AI best practices evolve—no code edits required:</p>
+        <div style="display:flex; gap:8px;">
+          <input type="text" id="newRuleInput" placeholder="e.g., Always wrap file paths in <filepath> tags..." style="margin:0;flex:1;" />
+          <button class="secondary" onclick="addModelRule()">+ Add Rule to Selected Model</button>
+        </div>
+        <ul id="modelRulesList" style="font-size:13px;color:var(--muted);padding-left:18px;margin-top:12px;"></ul>
+      </div>
+    </div>
+
+    <div>
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <h2>Compiled Prompt & 3-Layer Cost Report</h2>
+          <button class="secondary preset-btn" onclick="copyCompiled()">Copy Prompt</button>
+        </div>
+        <div class="kpi-grid">
+          <div class="kpi">
+            <div class="val" id="scoreVal">--</div>
+            <div class="lbl">First-Try Score</div>
+          </div>
+          <div class="kpi">
+            <div class="val" id="cacheVal">--</div>
+            <div class="lbl">Prefix Cacheable</div>
+          </div>
+          <div class="kpi">
+            <div class="val" id="recTierVal" style="color:var(--accent);font-size:16px;">--</div>
+            <div class="lbl">Smart Model Advice</div>
+          </div>
+        </div>
+        <div id="recReason" style="font-size:13px;color:var(--amber);margin-bottom:10px;"></div>
+        <pre id="compiledOutput">Click "Analyze & Generate Clarifying Questions" on the left to compile your first prompt.</pre>
+        <h2 style="margin-top:18px;">Why This Saves API Credits (Optimizations Applied)</h2>
+        <ul id="optimizationsList" style="font-size:13px;color:var(--muted);padding-left:18px;"></ul>
+        <h2 style="margin-top:18px;">API Cost Comparison (Per 1,000 Runs: Unoptimized Retries vs. PromptForge)</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Model</th>
+              <th>Tier</th>
+              <th>Unoptimized (2.4 turns)</th>
+              <th>PromptForge (1 turn + Cache + CoD)</th>
+              <th>Savings</th>
+            </tr>
+          </thead>
+          <tbody id="costTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let registry = {};
+    let currentAnswers = { context: "", constraints: "", output_format: "" };
+
+    async function loadModels() {
+      const res = await fetch("/api/models");
+      registry = await res.json();
+      document.getElementById("registryVersion").textContent = `Registry v${registry.version} (${registry.last_updated})`;
+      const sel = document.getElementById("modelSelect");
+      sel.innerHTML = "";
+      for (const [id, m] of Object.entries(registry.models)) {
+        const opt = document.createElement("option");
+        opt.value = id;
+        opt.textContent = `${m.name} [${m.dialect.delimiter.toUpperCase()}]`;
+        sel.appendChild(opt);
+      }
+      renderModelRules();
+    }
+
+    function renderModelRules() {
+      const mid = document.getElementById("modelSelect").value || "claude-sonnet";
+      const m = registry.models && registry.models[mid];
+      const ul = document.getElementById("modelRulesList");
+      ul.innerHTML = "";
+      if (!m) return;
+      for (const r of m.best_practices) {
+        const li = document.createElement("li");
+        li.textContent = r;
+        ul.appendChild(li);
+      }
+    }
+
+    function setPreset(text) {
+      document.getElementById("rawIdea").value = text;
+      runInterview();
+    }
+
+    async function runInterview() {
+      const raw_idea = document.getElementById("rawIdea").value.trim();
+      if (!raw_idea) return;
+      const res = await fetch("/api/interview", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ raw_idea }),
+      });
+      const data = await res.json();
+      document.getElementById("interviewCard").style.display = "block";
+      document.getElementById("roleInput").value = data.suggested_role;
+      if (data.model_recommendation && data.model_recommendation.recommended_model) {
+        document.getElementById("modelSelect").value = data.model_recommendation.recommended_model;
+      }
+
+      const container = document.getElementById("questionsContainer");
+      container.innerHTML = "";
+      for (const q of data.questions) {
+        currentAnswers[q.block] = q.default;
+        const box = document.createElement("div");
+        box.className = "q-box";
+        const title = document.createElement("div");
+        title.style.fontSize = "13px";
+        title.style.fontWeight = "600";
+        title.textContent = q.question;
+        box.appendChild(title);
+
+        const inp = document.createElement("input");
+        inp.type = "text";
+        inp.value = q.default;
+        inp.oninput = (e) => { currentAnswers[q.block] = e.target.value; };
+        box.appendChild(inp);
+
+        const pills = document.createElement("div");
+        pills.className = "opt-pills";
+        for (const optText of q.options) {
+          const pill = document.createElement("span");
+          pill.className = "opt-pill" + (optText === q.default ? " active" : "");
+          pill.textContent = optText;
+          pill.onclick = () => {
+            inp.value = optText;
+            currentAnswers[q.block] = optText;
+            Array.from(pills.children).forEach(c => c.classList.remove("active"));
+            pill.classList.add("active");
+            compilePrompt();
+          };
+          pills.appendChild(pill);
+        }
+        box.appendChild(pills);
+        container.appendChild(box);
+      }
+      compilePrompt();
+    }
+
+    async function compilePrompt() {
+      renderModelRules();
+      const blocks = {
+        role: document.getElementById("roleInput").value,
+        context: currentAnswers.context,
+        constraints: currentAnswers.constraints,
+        task: document.getElementById("rawIdea").value,
+        output_format: currentAnswers.output_format,
+      };
+      const model_id = document.getElementById("modelSelect").value;
+      const use_cod = document.getElementById("codToggle").checked;
+      const res = await fetch("/api/compile", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ blocks, model_id, use_cod }),
+      });
+      const data = await res.json();
+      document.getElementById("compiledOutput").textContent = data.compiled_prompt;
+      document.getElementById("scoreVal").textContent = `${data.completeness.score}/100`;
+      document.getElementById("cacheVal").textContent = `${data.token_metrics.prefix_cache_ratio_pct}%`;
+      document.getElementById("recTierVal").textContent = data.model_recommendation.recommended_model;
+      document.getElementById("recReason").textContent = `Advisor: ${data.model_recommendation.why}`;
+
+      const optList = document.getElementById("optimizationsList");
+      optList.innerHTML = "";
+      for (const o of data.optimizations_applied) {
+        const li = document.createElement("li");
+        li.textContent = o;
+        optList.appendChild(li);
+      }
+
+      const tbody = document.getElementById("costTableBody");
+      tbody.innerHTML = "";
+      for (const row of data.cost_comparison) {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td><strong>${row.name}</strong></td>
+          <td>${row.tier}</td>
+          <td style="color:var(--muted);">$${row.baseline_cost_per_1k_runs_usd.toFixed(2)}</td>
+          <td><strong>$${row.optimized_cost_per_1k_runs_usd.toFixed(2)}</strong></td>
+          <td class="save-pill">-${row.savings_percent}%</td>
+        `;
+        tbody.appendChild(tr);
+      }
+    }
+
+    async function addModelRule() {
+      const new_rule = document.getElementById("newRuleInput").value.trim();
+      const model_id = document.getElementById("modelSelect").value;
+      if (!new_rule) return;
+      const res = await fetch("/api/update-model", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ model_id, new_rule }),
+      });
+      const data = await res.json();
+      if (data.ok) {
+        registry = data.registry;
+        document.getElementById("newRuleInput").value = "";
+        renderModelRules();
+      }
+    }
+
+    function copyCompiled() {
+      const text = document.getElementById("compiledOutput").textContent;
+      navigator.clipboard.writeText(text);
+    }
+
+    loadModels();
+  </script>
+</body>
+</html>
